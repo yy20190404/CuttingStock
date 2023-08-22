@@ -8,13 +8,14 @@ windowsの場合は、"itadori.exe"と"ini.json"をダウンロードし、同�
 
 drawフォルダー: 長方形の図がpng形式で保存されます
 
-Located.csv: 並べられた長方形のデータ
+Located.csv: 並べられた長方形のデータ　（ファイル名変更可能）
 
 unlocated.csv: 並べることのできなかった長方形のデータ
 
 temp.csv: 手動入力の際保存される一時データ
 
 Locate rectangles into a rectangle as guillotine cut.
+
 
 ## install
 ### Windiows
@@ -28,10 +29,12 @@ Run "itadori.exe".
   
 the two files are located in "src" folder.
 
+
 ### Mac, Linux, others
 Download the all files. 
 Install "Nim" in your PC. 
 Compile "src/itadori.nim".  "nim c -r itadori.nim"
+
 
 ## Usage
 
