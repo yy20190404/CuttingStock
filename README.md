@@ -33,7 +33,7 @@ You can get the two files in "src" folder.
 ### Mac, Linux, others
 Download the all files. 
 Install "Nim" in your PC. 
-Compile "src/itadori.nim".  "nim c -r itadori.nim"
+Compile "src/itadori.nim".  "nim c --app:gui -r itadori.nim"
 
 
 ## Usage
