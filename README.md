@@ -44,11 +44,11 @@ When run itadori.exe, show mainwindow.
 ### Items in the window
 ① Path of input data file. you can use "csv" file or "Excel" file. The file has to contain the following data. When click "Open" button, show file select dialog. you can select file from the dialog.
 
-![File Select Dialog](./images/itadori02.jpg)
-
 DATA CONTENTS:
 
 NO., Width(mm), Height(mm), Qty
+
+![File Select Dialog](./images/itadori02.jpg)
 
 ② Path of output data file. You can select any folder and you can change the file neme. The output file is csv file. When click "Open" button, show file select dialog. you can select file from the dialog.
 
@@ -64,6 +64,7 @@ NO., Width(mm), Height(mm), Qty
 ⑥ Space between located rectangles.
 
 ⑦ When you want to input data manually, click this button. Manual input dialog will apear.
+
 ![Manual Input Dailog](./images/itadori04.jpg)
 
 ⑧ Try input data. Click this button. When the input data is calculatable, show the data into ⑨
