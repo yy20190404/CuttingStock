@@ -27,7 +27,7 @@ Run "itadori.exe".
 
   "ini.json"
   
-the two files are located in "src" folder.
+You can get the two files in "src" folder.
 
 
 ### Mac, Linux, others
