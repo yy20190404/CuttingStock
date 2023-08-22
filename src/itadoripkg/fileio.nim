@@ -9,6 +9,7 @@ import os
 import std/json
 
 type
+  # Type declaration regaring json file
   Extension* = object
     excelOld*, excel*, csv*: string
 
@@ -31,7 +32,8 @@ type
     space*:  SpaceF
 
 proc readJson*(fileName: string): Data =
-  var path = fileName #r"C:\Programs\Programs\Nim\itadori\config\config.json"
+  # Read json file then set data into Data type
+  var path = fileName 
   var f: File
   var data: Data
   var jsonNode: JsonNode
@@ -42,7 +44,21 @@ proc readJson*(fileName: string): Data =
     data = to(jsonNode, Data)
   data
 
+proc getJsonPath*(): string =
+  # Get json path from current path
+  let currentPath: string = paramStr(0)
+  var path: string = splitPath(currentPath).head
+  var jsonFile: string = path & r"\ini.json"
+  jsonFile
+
+proc iniConfig*(): Data =
+  # Return json Data
+  var jsonFile: string = getJsonPath()
+  var data: Data = readJson(jsonFile)
+  data
+
 proc saveJson*(fileName: string, data: Data) =
+  # Save josn file
   let text00 = "{"
   let text01 = fmt""""drive": "{data.drive}", "homePath": "{data.homePath}", "inputName": "{data.inputName}", "inputFullName": "{data.inputFullName}", "outputName": "{data.outputName}", "outputFullName": "{data.outputFullName}", "drawDir": "{data.drawDir}", "extension": """
   let text02 = "{"
@@ -59,19 +75,8 @@ proc saveJson*(fileName: string, data: Data) =
   writeFile(fileName, jsonNode.pretty())
   
 
-proc getJsonPath*(): string =
-  let currentPath: string = paramStr(0)
-  var path: string = splitPath(currentPath).head
-  var jsonFile: string = path & r"\ini.json"
-  jsonFile
-
-proc iniConfig*(): Data =
-  var jsonFile: string = getJsonPath()
-  var data: Data = readJson(jsonFile)
-  data
-
 proc saveRects*(rects: seq[Rect], baseSize: seq[int], fileName: string, flag: bool = true){.discardable.}=
-  # 配置済長方形のデータをcsvファイルに書き込み
+  # Save csv file as located rectangle data
   var i: int
   var text: string
   var baseArea, rectArea, rectTotalArea: float
@@ -94,7 +99,7 @@ proc saveRects*(rects: seq[Rect], baseSize: seq[int], fileName: string, flag: bo
   writeFile(fileName, text)
 
 proc readCsvToArray*(fileName: string): seq[seq[float]] =
-  # csvファイルを開き　板取に必要な配列を作成
+  # Make array from reading csv file
   var p: CsvParser
   var arr: seq[seq[float]]
   var id, name: string
@@ -117,7 +122,7 @@ proc readCsvToArray*(fileName: string): seq[seq[float]] =
   arr
 
 proc readExcelToArray*(filename: string): seq[seq[float]] =
-  # Excelファイルを開き　板取に必要な配列を作成
+  # Make array from readind excel file
   var arr: seq[seq[float]]
   let 
     excel = readExcel(filename)
@@ -145,7 +150,7 @@ proc readExcelToArray*(filename: string): seq[seq[float]] =
   arr
 
 proc getUserEnv*(userPath: string = "HOMEPATH"): string =
-  # 環境変数の取得
+  # Get environment path
   var path: string = ""
   if existsEnv(userPath):
     path = getEnv(userPath)

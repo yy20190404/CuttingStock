@@ -21,6 +21,7 @@ proc progressRate*(firstLen, restLen: int): float =
   part
 
 proc manualInput*(fileName: string) =
+  # Show manual input dialog
   var index, qty: int
   var width, height: float
   var name: string
@@ -153,29 +154,30 @@ proc manualInput*(fileName: string) =
 
 
 proc selectInputMode*(mode: int, fileName: string = ""): seq[seq[float]] =
-    var arr: seq[seq[float]]
-    # 並べる長方形入力
-    case mode
-    of 0:
-        # テスト
-        arr = @[@[2000.0, 1000.0], @[1500.0, 400.0], @[1000.0, 500.0], @[800.0, 300.0], @[600.0, 20.0], @[600.0, 200.0], @[500.0, 200.0], @[400.0, 300.0], @[200.0, 100.0], @[200.0, 100.0], @[200.0, 100.0]]
-    of 1:
-        # 手動入力
-        var tempFile = fileName.splitPath.head & "\\temp.csv"
-        arr = readCsvToArray(tempFile)
+  # Auto select input mode
+  var arr: seq[seq[float]]
+  # 並べる長方形入力
+  case mode
+  of 0:
+      # テスト
+      arr = @[@[2000.0, 1000.0], @[1500.0, 400.0], @[1000.0, 500.0], @[800.0, 300.0], @[600.0, 20.0], @[600.0, 200.0], @[500.0, 200.0], @[400.0, 300.0], @[200.0, 100.0], @[200.0, 100.0], @[200.0, 100.0]]
+  of 1:
+      # 手動入力
+      var tempFile = fileName.splitPath.head & "\\temp.csv"
+      arr = readCsvToArray(tempFile)
 
-    of 2:
-        # エクセルファイル読み込み
-        arr = readExcelToArray(fileName)
+  of 2:
+      # エクセルファイル読み込み
+      arr = readExcelToArray(fileName)
 
-    of 3:
-        # CSVファイル読み込み
-        arr = readCsvToArray(fileName)
+  of 3:
+      # CSVファイル読み込み
+      arr = readCsvToArray(fileName)
 
-    else:
-        arr = @[@[2000.0, 1000.0]]
+  else:
+      arr = @[@[2000.0, 1000.0]]
 
-    arr
+  arr
 
 
 proc showWindow*()=

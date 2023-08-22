@@ -32,18 +32,9 @@ type SpaceBase* = object
   # ベース長方形の周辺スペースオブジェクト
   sxl*, sxr*, syb*, syt*: int
 
-#[
-iterator eachP*(r: Rect): Point =
-  # peaks配列オブジェクトのイテレータ化
-  let length = r.peaks.len
-  var i = 0
-  while i < length:
-    yield p.peaks[i]
-    inc i
-]#
-
 
 proc reverse*[T](arr: seq[T]): seq[T] =
+  # Reverse array
   var ans: seq[T]
   for i in countdown(arr.high, arr.low):
     ans.add(arr[i])
@@ -122,6 +113,7 @@ proc makeRect*(w, h: int, x = 0, y = 0, name = "no name"): Rect =
   r
 
 proc rotateRect*(r: Rect): Rect =
+  # Rotate rectangle 90 degree
   var selfRect: Rect = r
   var t: int
   var flag: bool
