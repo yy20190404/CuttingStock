@@ -37,5 +37,42 @@ Compile "src/itadori.nim".  "nim c -r itadori.nim"
 
 
 ## Usage
+### Run itadori.exe
+When run itadori.exe, show mainwindow.
 
+![Main Window](./images/itadori01.jpg)
+### Items in the window
+① Path of input data file. you can use "csv" file or "Excel" file. The file has to contain the following data. When click "Open" button, show file select dialog. you can select file from the dialog.
+
+![File Select Dialog](./images/itadori02.jpg)
+
+DATA CONTENTS:
+
+NO., Width(mm), Height(mm), Qty
+
+② Path of output data file. You can select any folder and you can change the file neme. The output file is csv file. When click "Open" button, show file select dialog. you can select file from the dialog.
+
+
+③ Path of image folder. You can select any folder. Draw folder will be made in the selected folder.  When click "Open" button, show file select dialog. you can select folder from the dialog.
+
+![Folder select Dialog](./images/itadori03.jpg)
+
+④ Check box to select base rectangle size.
+
+⑤ Outside trerance of base rectangle.
+
+⑥ Space between located rectangles.
+
+⑦ When you want to input data manually, click this button. Manual input dialog will apear.
+![Manual Input Dailog](./images/itadori04.jpg)
+
+⑧ Try input data. Click this button. When the input data is calculatable, show the data into ⑨
+
+⑨ Input data viewer
+
+⑩ Output data Viewer
+
+⑪ Quit button. Leave main window without calculate.
+
+⑫ Calculate button. get input data, calculate location of rectangles, make and save output data, make and save images.
 
