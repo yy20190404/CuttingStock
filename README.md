@@ -31,9 +31,11 @@ You can get the two files in "src" folder.
 
 
 ### Mac, Linux, others
-Download the all files. 
+Download all files here except images folder. 
 Install "Nim" in your PC. 
-Compile "src/itadori.nim".  "nim c --app:gui -r itadori.nim"
+Compile "src/itadori.nim".  "nim c --app:gui itadori.nim"
+Locate execution file and ini.json in same folder.
+Run execution file.
 
 
 ## Usage
