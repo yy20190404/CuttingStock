@@ -2,10 +2,10 @@
   "drive": "HOMEDRIVE",
   "homePath": "HOMEPATH",
   "inputName": "list",
-  "inputFullName": "C:\\Users\\kanto\\@DATA\\data\\list.csv",
+  "inputFullName": "",
   "outputName": "located",
-  "outputFullName": "C:\\Users\\kanto\\@DATA\\data\\Located.csv",
-  "drawDir": "C:\\Users\\kanto\\@DATA\\data\\draw",
+  "outputFullName": "",
+  "drawDir": "",
   "extension": {
     "excelOld": "xls",
     "excel": "xlsx",
