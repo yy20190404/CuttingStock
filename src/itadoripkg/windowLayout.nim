@@ -1,18 +1,17 @@
 import nigui
 import nigui/msgBox
-import submodule
-import cal
 import strutils
 import rect
 import fileio
 import plot
 import strformat
 import os
+import start
+import asyncdispatch
 
-
-proc setBase*(w, h: float): seq[int] =
+proc setBase*(w, h: float): seq[float] =
   # w, hをミクロンオーダー整数の配列にして返す
-  var base: seq[int] = @[toUMInt(w), toUMInt(h)]
+  var base: seq[float] = @[w, h]
   base
 
 proc progressRate*(firstLen, restLen: int): float =
@@ -153,14 +152,16 @@ proc manualInput*(fileName: string) =
   miwindow.show()
 
 
-proc selectInputMode*(mode: int, fileName: string = ""): seq[seq[float]] =
+proc selectInputMode*(mode: int, fileName: string = ""): seq[Rect] =
   # Auto select input mode
-  var arr: seq[seq[float]]
+  var arr: seq[Rect]
   # 並べる長方形入力
   case mode
   of 0:
       # テスト
-      arr = @[@[2000.0, 1000.0], @[1500.0, 400.0], @[1000.0, 500.0], @[800.0, 300.0], @[600.0, 20.0], @[600.0, 200.0], @[500.0, 200.0], @[400.0, 300.0], @[200.0, 100.0], @[200.0, 100.0], @[200.0, 100.0]]
+      var arrTest = @[@[2000.0, 1000.0], @[1500.0, 400.0], @[1000.0, 500.0], @[800.0, 300.0], @[600.0, 20.0], @[600.0, 200.0], @[500.0, 200.0], @[400.0, 300.0], @[200.0, 100.0], @[200.0, 100.0], @[200.0, 100.0]]
+      for i, a in arrTest:
+        arr.add(makeRect(w = a[0], h = a[1], index = (i + 1)))
   of 1:
       # 手動入力
       var tempFile = fileName.splitPath.head & "\\temp.csv"
@@ -175,7 +176,7 @@ proc selectInputMode*(mode: int, fileName: string = ""): seq[seq[float]] =
       arr = readCsvToArray(fileName)
 
   else:
-      arr = @[@[2000.0, 1000.0]]
+      arr.add(makeRect(w = 2000.0, h = 1000.0, index = 1))
 
   arr
 
@@ -202,6 +203,7 @@ proc showWindow*()=
   var sy = data.space.sy
   var openFile, saveFile: string
   var noNgFlag: bool = false
+  var imageFiles: seq[string] = @[]
 
   if data.inputFullName == "":
     openFile = drive & homePath & "\\" & data.inputName & ".csv"
@@ -217,6 +219,9 @@ proc showWindow*()=
 
   app.init()
   # Initialization of app
+
+  var winImage: Window = newWindow()
+  waitFor startWindow(winImage, "..\\images\\top3.png")
 
   # ##########################
   # Window Instance
@@ -660,6 +665,20 @@ proc showWindow*()=
   # ##########################
   button300.onClick = proc(event: ClickEvent) =
     closew.hide()
+    #[
+    var winImage2 = newWindow("Show Located Images")
+    winImage2.width = 582.scaleToDpi
+    winImage2.height = 436.scaleToDpi
+    var images: seq[Image]
+
+    for f in imageFiles:
+      var image2 = newImage()
+      image2.loadFromFile(f)
+      images.add(image2)
+    discard startImageWindow(winImage2, imageFiles, imageFiles.len, images)
+    ]#
+    startImageWindow(imageFiles)
+    
 
   # ##########################
   # Button onClick events: Manual Input
@@ -712,21 +731,21 @@ proc showWindow*()=
       else: inputMode = 99
 
     # ベースサイズ・スペースの取得
-    var arr:seq[seq[float]]
-    var baseSize: seq[int] = @[toUMInt(w), toUMInt(h)]
+    var arr:seq[Rect]
+    var baseSize: seq[float] = @[w, h]
 
     # 幅高さの集合arrの作成
     arr = selectInputMode(inputMode, openFile)
 
     # 配置する長方形の情報をテキストアレアに表示
-    var text: string = fmt"Base Size: {toMMFloat(baseSize[0])} x {toMMFloat(baseSize[1])} mm" & "\r\n"
+    var text: string = fmt"Base Size: {baseSize[0]} x {baseSize[1]} mm" & "\r\n"
     text = text & "=== Rectangles to be located ===\r\n"
-    text = text & "No., Width, Height\r\n"
+    text = text & "No., Width, Height, name\r\n"
     var i = 1
     var all = arr.len
     for s in arr:
       progressBar1.value = float(i/all)
-      text = text & fmt"{i}, {s[0]}, {s[1]}" & "\r\n"
+      text = text & fmt"{i}, {s.w}, {s.h}, {s.name}" & "\r\n"
       inc i
     textArea140.text = text  
 
@@ -734,6 +753,8 @@ proc showWindow*()=
   # Button onClick events: locate rectangles
   # ##########################
   button051.onClick = proc(event: ClickEvent) =
+
+    winImage.dispose()
     # File名の取得
     if textBox010.text != "": openFile = textbox010.text 
     saveFile = textBox020.text
@@ -778,69 +799,84 @@ proc showWindow*()=
       else: inputMode = 99
 
     # ベースサイズ・スペースの取得
-    var arr:seq[seq[float]]
-    var baseSize: seq[int] = @[toUMInt(w), toUMInt(h)]
+    var arr:seq[Rect]
+    var baseSize: seq[float] = @[w, h]
 
     # 幅高さの集合arrの作成
     arr = selectInputMode(inputMode, openFile)
 
-    # 配置する長方形の情報をテキストアレアに表示
-    var text: string = fmt"Base Size: {toMMFloat(baseSize[0])} x {toMMFloat(baseSize[1])} mm" & "\r\n"
+    # 配置する長方形の情報をテキストエリアに表示
+    var text: string = fmt"Base Size: {baseSize[0]} x {baseSize[1]} mm" & "\r\n"
     text = text & "=== Rectangles to be located ===\r\n"
-    text = text & "No., Width, Height\r\n"
+    text = text & "No., Width, Height, name\r\n"
     var i = 1
     var all = arr.len
     for s in arr:
       progressBar1.value = float(i/all)
-      text = text & fmt"{i}, {s[0]}, {s[1]}" & "\r\n"
+      text = text & fmt"{i}, {s.w}, {s.h}, {s.name}" & "\r\n"
       inc i
     textArea140.text = text  
 
-    var spaceBase: SpaceBase = 
-      SpaceBase(sxl: toUMInt(textBox080.text.parseFloat), 
-      sxr: toUMInt(textBox090.text.parseFloat), 
-      syb: toUMInt(textBox100.text.parseFloat), 
-      syt: toUMInt(textBox110.text.parseFloat))
-    var space: Space = 
-      Space(sx: toUMInt(textBox120.text.parseFloat), 
-      sy: toUMInt(textBox121.text.parseFloat))
+    # ################################
+    # From here: Locating calculation
+    var baseSizeInt: seq[int] = @[toUMint(baseSize[0]), toUMint(baseSize[1])]
+    var spaceBaseInt: SpaceBaseInt = 
+      SpaceBaseInt(
+        sxl: toUMint(textBox080.text.parseFloat), 
+        sxr: toUMint(textBox090.text.parseFloat), 
+        syb: toUMint(textBox100.text.parseFloat), 
+        syt: toUMint(textBox110.text.parseFloat)
+      )
+    var spaceInt: SpaceInt = 
+      SpaceInt(
+        sx: toUMint(textBox120.text.parseFloat), 
+        sy: toUMint(textBox121.text.parseFloat)
+      )
 
     # 外周不使用部を考慮したベース長方形の作成
-    var base: Rect = makeBase(baseSize, spaceBase)
+    var baseInt: RectInt = makeBase(baseSizeInt, spaceBaseInt)
 
+    #[
     # 幅高さの集合arrの作成
     arr = selectInputMode(inputMode, openFile)
-    var firstLen = arr.len
+    
     
     # mm単位floatをum単位intに変換、新たな倍列arrSeqを作成
-    var arrSeq: seq[seq[int]]
+    var arrSeq: seq[seq[float]]
     for each in arr:
-        arrSeq.add(toMicro(each))
+      var eachWH = @[each.w, each.h, each.name]
+      arrSeq.add(eachWH)
 
     # 幅高さの集合arrSeq: seq[seq[int]]を長方形集合seq[Rect]に変換
     var rects: seq[Rect] = arrToRects(arrSeq)
+    ]#
 
     # seq[Rect]をbaseに配置できるものと配置できないものに選別
-    var okey, ng: Rects
-    var arrayRects: seq[Rects]
-    var ngText: string = "### Base ###\n"
+    
+    var rectsInt: seq[RectInt]
+    var okeyInt, ngInt: seq[RectInt]
+    var arrayRectsInt: seq[seq[RectInt]]
+    var ngText: string #= "### Base ###\n"
 
-    ngText = ngText & "    width: " & $w & " height: " & $h & "\n"
-    ngText = ngText & "=== Unlocateble rectangles ===\n"
-    ngText = ngText & "index: , width: , heihgt: \n"
+    for r in arr: rectsInt.add(toUMrect(r))
+    var firstLen = rectsInt.len
 
-    arrayRects = submodule.getLocatableRects(base, rects)
-    okey = arrayRects[0]
-    ng = arrayRects[1]
-    if ng.rects.len == 0: noNgFlag = true
-    for i, r in ng.rects:
-      ngText = ngText & $i & "," & $r.w & "," & $r.h & "\n"
+    #ngText = ngText & "    width: " & $w & " height: " & $h & "\n"
+    #ngText = ngText & "=== Unlocateble rectangles ===\n"
+    ngText = ngText & "index: , width: , heihgt, Qty, Name: \n"
+
+    arrayRectsInt = getLocatableRects(baseInt, rectsInt)
+    okeyInt = arrayRectsInt[0]
+    ngInt = arrayRectsInt[1]
+    if ngInt.len == 0: noNgFlag = true
+    for i, r in ngInt:
+      ngText = ngText & $i & "," & $toMMrect(r).w & "," & $toMMrect(r).h & "," & $1 & ","  & r.name & "\n"
     var savePath = savefile.splitpath.head & r"\unlocated.csv"
     # Write file of unlocatable rectangles
     writeFile(savePath, ngText)
 
     # 配置可能な長方形のリスト
-    rects = okey.rects
+    rectsInt = okeyInt
 
     var step: int = 0
     #printFirstRects(rects, step)
@@ -852,36 +888,74 @@ proc showWindow*()=
     # 長方形間スペース　space: Space
     var firstWrite: bool = true
     var text2: string = ""
-
+    
+    var img: string
+    
+    #printFirstRects(rectsInt, step)
+    
+    var baseFloat: Rect
+    var stepText: string
     while true:
-        var locatedRects: seq[Rect] = @[]
-        # 長方形の配置
-        locatedRects = submodule.locateRects(base, rects, locatedRects, space)
-        
-        # ProgressBar用初期配列長さの取得
-        if locatedRects.len == 0: break
+      var locatedRects: seq[RectInt] = @[]
 
-        # 配置済データをテキストエリアに表示
-        text2 = text2 & fmt"=== {step}枚目 ===" & "\r\n"
-        for i, r in locatedRects:
-          text2 = text2 & fmt"{i}, origin= {r.p0.x}, {r.p0.y}; Width= {r.w}; Height= {r.h}" & "\r\n"
-        
-        textArea150.text = text2
+      if rectsInt.len == 0: break
 
-        # rectsから既配置のlocatedRectsを削除
-        rects = submodule.delLocatedRects(rects, locatedRects)
+      # 長方形の配置
+      locatedRects = locateRects(baseInt, rectsInt, locatedRects, spaceInt)
+      
 
-        # progressBarを表示
-        progressBar2.value = progressRate(firstLen, (firstLen - rects.len))
-        
-        # 配置済データをcsvファイルに書き込み
-        saveRects(locatedRects, baseSize, saveFile, firstWrite)
-        firstWrite = false
-        
-        # 配置した長方形図形を作成・セーブ
-        if not os.existsDir(drawDir): createDir(drawDir) 
-        makePlot(locatedRects, base, fmt"{drawDir}\image{step}.png")
-        inc step
+      
+
+      # ProgressBar用初期配列長さの取得
+      if locatedRects.len == 0: break
+
+      # 配置済データをテキストエリアに表示
+      text2 = text2 & fmt"=== {step}枚目 ===" & "\r\n"
+      text2 = text2 & "No., Origin X, Origin Y, Width, Height, Name" & "\r\n"
+      for i, r in locatedRects:
+        text2 = text2 & fmt"{i}, {toMMrect(r).p0.x}, {toMMrect(r).p0.y}, {toMMrect(r).w}, {toMMrect(r).h}, {r.name}" & "\r\n"
+
+      textArea150.text = text2
+
+      # rectsから既配置のlocatedRectsを削除
+      rectsInt = delLocatedRects(rectsInt, locatedRects)
+
+      printLocatedRects(locatedRects, rectsInt, step)
+
+      # progressBarを表示
+      progressBar2.value = progressRate(firstLen, (firstLen - rectsInt.len))
+
+      # 配置済データをcsvファイルに書き込み
+      var locatedRectsFloat: seq[Rect]
+      for r in locatedRects: locatedRectsFloat.add(toMMrect(r))
+      saveRects(locatedRectsFloat, baseSize, saveFile, firstWrite)
+      firstWrite = false
+
+      # 配置した長方形図形を作成・セーブ
+      if not os.existsDir(drawDir): createDir(drawDir) 
+      baseFloat = toMMrect(baseInt)
+      if step < 10: stepText = "000" & $step
+      elif step < 100: stepText = "00" & $step
+      elif step < 1000: stepText = "0" & $step
+      else: stepText = $step
+      img = drawDir & "\\image" & stepText & ".png"
+      imageFiles.add(img)
+      makePlot(locatedRectsFloat, baseFloat, fmt"{drawDir}\image{stepText}.png")
+      #discard startWindow(winImage, img)
+      #discard showImage(winImage, img)
+      #winImage.show()
+      inc step
+    #[
+    hideWindow()
+    let winImage = newWindow()
+    winImage.width = 582.scaleToDpi
+    winImage.height = 436.scaleToDpi
+
+    let containerImage = newLayoutContainer(Layout_Horizontal)
+
+    for i, f in imageFiles:
+      break
+    ]#
 
     #ウィンドウの各値をDataに書き込み
     data.inputFullName = openFile 

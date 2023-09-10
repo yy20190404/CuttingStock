@@ -1,6 +1,5 @@
 import strformat
 import rect
-import cal
 
 import std/parsecsv
 import strutils
@@ -38,7 +37,7 @@ proc readJson*(fileName: string): Data =
   var data: Data
   var jsonNode: JsonNode
   if fileExists(path): 
-    f = io.open(path)
+    f = open(path)
     jsonNode = parseJson(f.readall())
     f.close()
     data = to(jsonNode, Data)
@@ -75,7 +74,7 @@ proc saveJson*(fileName: string, data: Data) =
   writeFile(fileName, jsonNode.pretty())
   
 
-proc saveRects*(rects: seq[Rect], baseSize: seq[int], fileName: string, flag: bool = true){.discardable.}=
+proc saveRects*(rects: seq[Rect], baseSize: seq[float], fileName: string, flag: bool = true){.discardable.}=
   # Save csv file as located rectangle data
   var i: int
   var text: string
@@ -84,69 +83,74 @@ proc saveRects*(rects: seq[Rect], baseSize: seq[int], fileName: string, flag: bo
     text = ""
   else:
     text = readFile(fileName)
-  text = text & fmt"Base Size:, Width, {toMMFloat(baseSize[0])}, Height, {toMMFloat(baseSize[1])}" & "\n"
-  baseArea = float(baseSize[0] * baseSize[1] / 1000000)
-  text = text & fmt"No., LocatedX(mm), LocatedY(mm), Width(mm), Height(mm)" & "\n"
+  text = text & fmt"Base Size:, Width, {baseSize[0]}, Height, {baseSize[1]}" & "\n"
+  baseArea = float(baseSize[0] * baseSize[1])
+  text = text & fmt"No., LocatedX(mm), LocatedY(mm), Width(mm), Height(mm), name" & "\n"
   i = 1
   rectTotalArea = 0.0
   for r in rects:
-    text = text & fmt"{i}, {toMMFloat(r.p0.x)}, {toMMFloat(r.p0.y)}, {toMMFloat(r.w)}, {toMMFloat(r.h)}" & "\n"
-    rectArea = toMMFloat(r.w) * toMMFloat(r.h)
+    text = text & fmt"{i}, {r.p0.x}, {r.p0.y}, {r.w}, {r.h}, {r.name}" & "\n"
+    rectArea = r.w * r.h
     rectTotalArea = rectTotalArea + rectArea
     inc i
   text = text & fmt"Yield:, {rectTotalArea / baseArea * 100}, %" & "\n"
   text = text & "\n"
   writeFile(fileName, text)
 
-proc readCsvToArray*(fileName: string): seq[seq[float]] =
+proc readCsvToArray*(fileName: string): seq[Rect] =
   # Make array from reading csv file
-  var p: CsvParser
-  var arr: seq[seq[float]]
-  var id, name: string
-  var w, h: float
-  var qty: int
+  var 
+    p: CsvParser
+    arr: seq[Rect]
+    name: string
+    w, h: float
+    id, qty: int
 
   p.open(fileName)
   p.readHeaderRow()
   while p.readRow():
     for col in items(p.headers):
-      if col == p.headers[0]: id = p.rowEntry(col)
+      if col == p.headers[0]: id = p.rowEntry(col).parseInt
       if col == p.headers[1]: w = p.rowEntry(col).parseFloat
       if col == p.headers[2]: h = p.rowEntry(col).parseFloat
       if col == p.headers[3]: qty = p.rowEntry(col).parseInt
       if p.headers.len > 4:
         if col == p.headers[4]: name = p.rowEntry(col)
     for i in 1..qty:
-      arr.add(@[w, h])
+      arr.add(makeRect(index = id, w = w, h = h, name = name))
   p.close()
   arr
 
-proc readExcelToArray*(filename: string): seq[seq[float]] =
+proc readExcelToArray*(filename: string): seq[Rect] =
   # Make array from readind excel file
-  var arr: seq[seq[float]]
   let 
     excel = readExcel(filename)
     sheets = excel.sheetNames
     sheet = excel.getSheet(sheets[0])
-  var header: seq[string]
-  var no, qty: int
-  var w, h: float
-  var row: Row
+  var 
+    arr: seq[Rect]
+    header: seq[string]
+    no, qty: int
+    w, h: float
+    row: Row
+    name: string
 
   row = sheet.row 1
-  for col in 0 ..< 4:
+  for col in 0 ..< 5:
     header.add(row[col.toCol, string])
 
-  var i = 0
+  var first: bool = true
   for row in sheet.rows:
-    if i > 0:
+    if first:
+      first = false
+    else:
       no =  row["A", int]
       w =   row["B", float]
       h =   row["C", float]
       qty = row["D", int]
+      name = row["E", string]
       for j in 0 ..< qty:
-        arr.add(@[w, h])
-    inc i
+        arr.add(makeRect(index = no, w = w, h = h, name = name))
   arr
 
 proc getUserEnv*(userPath: string = "HOMEPATH"): string =

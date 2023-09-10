@@ -12,9 +12,9 @@
     "csv": "csv"
   },
   "baseSize": {
-    "name": "4x8",
-    "width": 2438.0,
-    "height": 1219.0
+    "name": "5x10",
+    "width": 3048.0,
+    "height": 1524.0
   },
   "baseSpace": {
     "sxl": 20.0,

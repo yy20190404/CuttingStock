@@ -6,8 +6,8 @@ proc makePlot*(arr: seq[Rect], base: Rect, file: string){.discardable.}=
   # Plot image from located rectangle data
   var 
     selfArr = arr
-    baseX: int = base.p0.x
-    baseY: int = base.p0.y
+    baseX: float = base.p0.x
+    baseY: float = base.p0.y
     ax: PyObject
   let 
     plt = pyImport("matplotlib.pyplot")
