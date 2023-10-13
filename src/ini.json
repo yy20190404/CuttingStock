@@ -1,0 +1,29 @@
+{
+  "drive": "HOMEDRIVE",
+  "homePath": "HOMEPATH",
+  "inputName": "list",
+  "inputFullName": "",
+  "outputName": "located",
+  "outputFullName": "",
+  "drawDir": "",
+  "extension": {
+    "xls": "xls",
+    "xlsx": "xlsx",
+    "csv": "csv"
+  },
+  "baseSize": {
+    "name": "4x8",
+    "width": 2438.0,
+    "height": 1219.0
+  },
+  "baseSpace": {
+    "sxl": 20.0,
+    "sxr": 20.0,
+    "syb": 50.0,
+    "syt": 20.0
+  },
+  "space": {
+    "sx": 20.0,
+    "sy": 20.0
+  }
+}
