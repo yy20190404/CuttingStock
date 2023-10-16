@@ -2,19 +2,19 @@
   "drive": "HOMEDRIVE",
   "homePath": "HOMEPATH",
   "inputName": "list",
-  "inputFullName": "",
+  "inputFullName": "C:\\Users\\kanto\\@DATA\\data\\list.csv",
   "outputName": "located",
-  "outputFullName": "",
-  "drawDir": "",
+  "outputFullName": "C:\\Users\\kanto\\@DATA\\data\\Located.csv",
+  "drawDir": "C:\\Users\\kanto\\@DATA\\data\\draw",
   "extension": {
-    "excelOld": "xls",
-    "excel": "xlsx",
+    "xls": "xls",
+    "xlsx": "xlsx",
     "csv": "csv"
   },
   "baseSize": {
-    "name": "5x10",
-    "width": 3048.0,
-    "height": 1524.0
+    "name": "4x8",
+    "width": 2438.0,
+    "height": 1219.0
   },
   "baseSpace": {
     "sxl": 20.0,
