@@ -20,7 +20,7 @@ proc progressRate*(firstLen, restLen: int): float =
   part
 
 proc manualInput*(fileName: string) =
-  # Show manual input dialog
+  ## Show manual input dialog
   var 
     index, qty: int
     width, height: float
@@ -30,127 +30,128 @@ proc manualInput*(fileName: string) =
     le: string = "\r\n"
     returnText: string
 
-  # manual input window
-  var miwindow = newWindow()
-  miwindow.width = 500.scaleToDpi
-  miwindow.height = 300.scaleToDpi
+  block manualInputwindow: # Manual Input Window
+    var miwindow = newWindow()
+    miwindow.width = 500.scaleToDpi
+    miwindow.height = 300.scaleToDpi
 
-  var miContainer = newLayoutContainer(Layout_Vertical)
-  miwindow.add(miContainer)
+    var miContainer = newLayoutContainer(Layout_Vertical)
+    miwindow.add(miContainer)
 
-  var inputContainer = newLayoutContainer(Layout_Vertical)
-  miContainer.add(inputContainer)
+    var inputContainer = newLayoutContainer(Layout_Vertical)
+    miContainer.add(inputContainer)
 
-  var inputContainer1 = newLayoutContainer(Layout_Horizontal)
-  inputContainer.add(inputContainer1)
-  inputContainer1.frame = newFrame("Input Data")
+    var inputContainer1 = newLayoutContainer(Layout_Horizontal)
+    inputContainer.add(inputContainer1)
+    inputContainer1.frame = newFrame("Input Data")
 
-  var inputContainer2 = newLayoutContainer(Layout_Horizontal)
-  inputContainer.add(inputContainer2)
+    var inputContainer2 = newLayoutContainer(Layout_Horizontal)
+    inputContainer.add(inputContainer2)
 
-  var inputContainer3 = newLayoutContainer(Layout_Vertical)
-  inputContainer2.add(inputContainer3)
-  inputContainer3.frame = newFrame("Input Name")
+    var inputContainer3 = newLayoutContainer(Layout_Vertical)
+    inputContainer2.add(inputContainer3)
+    inputContainer3.frame = newFrame("Input Name")
 
-  var inputContainer4 = newLayoutContainer(Layout_Horizontal)
-  inputContainer3.add(inputContainer4)
+    var inputContainer4 = newLayoutContainer(Layout_Horizontal)
+    inputContainer3.add(inputContainer4)
 
-  var inputContainer5 = newLayoutContainer(Layout_Vertical)
-  inputContainer2.add(inputContainer5)
+    var inputContainer5 = newLayoutContainer(Layout_Vertical)
+    inputContainer2.add(inputContainer5)
 
-  var dataContainer = newLayoutContainer(Layout_Vertical)
-  miContainer.add(dataContainer)
-  dataContainer.frame = newFrame("Input Data Viewer")
+    var dataContainer = newLayoutContainer(Layout_Vertical)
+    miContainer.add(dataContainer)
+    dataContainer.frame = newFrame("Input Data Viewer")
 
-  var label_mi010 = newLabel()
-  inputContainer1.add(label_mi010)
-  label_mi010.text = "No."
+    var label_mi010 = newLabel()
+    inputContainer1.add(label_mi010)
+    label_mi010.text = "No."
 
-  var textBox_mi010 = newTextBox()
-  inputContainer1.add(textBox_mi010)
-  textBox_mi010.text = "1"
+    var textBox_mi010 = newTextBox()
+    inputContainer1.add(textBox_mi010)
+    textBox_mi010.text = "1"
 
-  var label_mi011 = newLabel()
-  inputContainer1.add(label_mi011)
-  label_mi011.text = "Width"
+    var label_mi011 = newLabel()
+    inputContainer1.add(label_mi011)
+    label_mi011.text = "Width"
 
-  var textBox_mi011 = newTextBox()
-  inputContainer1.add(textBox_mi011)
+    var textBox_mi011 = newTextBox()
+    inputContainer1.add(textBox_mi011)
 
-  var label_mi012 = newLabel()
-  inputContainer1.add(label_mi012)
-  label_mi012.text = "Height"
+    var label_mi012 = newLabel()
+    inputContainer1.add(label_mi012)
+    label_mi012.text = "Height"
 
-  var textBox_mi012 = newTextBox()
-  inputContainer1.add(textBox_mi012)
+    var textBox_mi012 = newTextBox()
+    inputContainer1.add(textBox_mi012)
 
-  var label_mi013 = newLabel()
-  inputContainer1.add(label_mi013)
-  label_mi013.text = "Qty"
+    var label_mi013 = newLabel()
+    inputContainer1.add(label_mi013)
+    label_mi013.text = "Qty"
 
-  var textBox_mi013 = newTextBox()
-  inputContainer1.add(textBox_mi013)
+    var textBox_mi013 = newTextBox()
+    inputContainer1.add(textBox_mi013)
 
-  var textBox_mi020 = newTextBox()
-  inputContainer3.add(textBox_mi020)
+    var textBox_mi020 = newTextBox()
+    inputContainer3.add(textBox_mi020)
 
-  var label_mi021 = newLabel()
-  inputContainer5.add(label_mi021)
+    var label_mi021 = newLabel()
+    inputContainer5.add(label_mi021)
 
-  var button_mi020 = newButton("Input")
-  inputContainer5.add(button_mi020)
+    var button_mi020 = newButton("Input")
+    inputContainer5.add(button_mi020)
 
-  var textArea030 = newTextArea()
-  dataContainer.add(textArea030)
+    var textArea030 = newTextArea()
+    dataContainer.add(textArea030)
 
-  var dataContainer1 = newLayoutContainer(Layout_Horizontal)
-  dataContainer.add(dataContainer1)
+    var dataContainer1 = newLayoutContainer(Layout_Horizontal)
+    dataContainer.add(dataContainer1)
 
-  var label_mi030 = newLabel()
-  dataContainer1.add(label_mi030)
-  label_mi030.text = "                                                                                                       "
+    var label_mi030 = newLabel()
+    dataContainer1.add(label_mi030)
+    label_mi030.text = "                                                                                                       "
 
-  var button_mi030 = newButton("OK")
-  dataContainer1.add(button_mi030)
+    var button_mi030 = newButton("OK")
+    dataContainer1.add(button_mi030)
 
-  var button_mi031 = newButton("Cancel")
-  dataContainer1.add(button_mi031)
+    var button_mi031 = newButton("Cancel")
+    dataContainer1.add(button_mi031)
 
-  button_mi020.onClick = proc(event: ClickEvent) =
-    index = textBox_mi010.text.parseInt
-    width = textBox_mi011.text.parseFloat
-    height = textBox_mi012.text.parseFloat
-    qty = textBox_mi013.text.parseInt
-    name = textBox_mi020.text
-    if textArea030.text == "": textArea030.text = "No.,Width,Height,Qty,Name" & le
+    block clickEvents: # button click events
+      button_mi020.onClick = proc(event: ClickEvent) =
+        index = textBox_mi010.text.parseInt
+        width = textBox_mi011.text.parseFloat
+        height = textBox_mi012.text.parseFloat
+        qty = textBox_mi013.text.parseInt
+        name = textBox_mi020.text
+        if textArea030.text == "": textArea030.text = "No.,Width,Height,Qty,Name" & le
 
-    lineText = $index & "," & $width & "," &  $height & "," & $qty & "," & name & le
-    returnText = textArea030.text
-    returnText = returnText & lineText
-    textArea030.text = returnText
+        lineText = $index & "," & $width & "," &  $height & "," & $qty & "," & name & le
+        returnText = textArea030.text
+        returnText = returnText & lineText
+        textArea030.text = returnText
 
-    names.add(name)
+        names.add(name)
 
-    index = index + 1
-    textBox_mi010.text = $index
-    textBox_mi011.text = ""
-    textBox_mi012.text = ""
-    textBox_mi013.text = ""
-    textBox_mi020.text = name
-    textBox_mi011.focus
+        index = index + 1
+        textBox_mi010.text = $index
+        textBox_mi011.text = ""
+        textBox_mi012.text = ""
+        textBox_mi013.text = ""
+        textBox_mi020.text = name
+        textBox_mi011.focus
 
-  button_mi030.onClick = proc(event: ClickEvent) =
-    let tempFile = fileName.splitPath.head & "\\temp.csv"
-    writeFile(tempFile, returnText)
-    miwindow.hide()
+      button_mi030.onClick = proc(event: ClickEvent) =
+        let tempFile = fileName.splitPath.head & "\\temp.csv"
+        writeFile(tempFile, returnText)
+        miwindow.hide()
 
-  button_mi031.onClick = proc(event: ClickEvent) =
-    returnText = ""
-    let tempFile = fileName.splitPath.head & "\\temp.csv"
-    writeFile(tempFile, returnText)
-    miwindow.hide()
-  
-  miwindow.show()
+      button_mi031.onClick = proc(event: ClickEvent) =
+        returnText = ""
+        let tempFile = fileName.splitPath.head & "\\temp.csv"
+        writeFile(tempFile, returnText)
+        miwindow.hide()
+    
+    miwindow.show()
 
 
 proc showWindow*()=
@@ -158,42 +159,47 @@ proc showWindow*()=
   # Show Window for GUI
   # #############################################################################
 
-  var data: Data = initConfig()
-  # ini.jsonファイルの読み込み
+  var data: Data = initConfig()  # read ini.json
 
-  var 
+  var # set variables
     sxl = data.baseSpace.sxl
     sxr = data.baseSpace.sxr
     syb = data.baseSpace.syb
     syt = data.baseSpace.syt
     sx = data.space.sx
     sy = data.space.sy
-    openFile, saveFile: string
+    openFile, saveFile, drawDir: string
     noNgFlag: bool = false
     imageFiles: seq[string] = @[]
 
-  openFile = data.inputFullName
+  block files: # set file names
+    if data.inputFullName == "":
+      openFile = getenv(data.drive) & getenv(data.homePath) & "\\list.csv"
+    else:
+      openFile = data.inputFullName
 
-  saveFile = data.outputFullName
+    if data.outputFullName == "":
+      saveFile = getenv(data.drive) & getenv(data.homePath) & "\\located.csv"
+    else:
+      saveFile = data.outputFullName
+    #if not existsDir(splitPath(saveFile).head): createDir(splitPath(saveFile).head)
+    #if not existsFile(saveFile): writefile(saveFile, "")
 
+    drawDir = data.drawDir
+    if drawDir == "": data.drawDir = getenv(data.drive) & getenv(data.homePath) & "\\draw"
+    #if not os.existsDir(data.drawDir): createDir(data.drawDir) 
 
-  app.init()
-  # Initialization of app
+  app.init() # Initialization of window app
 
+  # show start window
   var winImage: Window = newWindow()
   waitFor startWindow(winImage, "..\\images\\top3.png")
 
-  # ##########################
-  # Window Instance
-  # ##########################
+ # set main window elements
   var window = newWindow()
   window.width = 600.scaleToDpi
   window.height = 500.scaleToDpi
 
-
-  # ##########################
-  # LayoutContainers Instance
-  # ##########################
   var mainContainer = newLayoutContainer(Layout_Vertical)
   window.add(mainContainer)
 
@@ -275,10 +281,6 @@ proc showWindow*()=
   var buttons2 = newLayoutContainer(Layout_Horizontal)
   control1.add(buttons2)
 
-
-  # ##########################
-  # File Path setting section
-  # ##########################
   var label010 = newLabel()
   input1.add(label010)
   label010.text = "Load File         "
@@ -312,10 +314,45 @@ proc showWindow*()=
   var button030 = newButton("Open")
   output2.add(button030)  
 
+  # set button onClick section
+  button010.onClick = proc(event: ClickEvent) =
+      # Open file dialog
+      var dialog = newOpenFileDialog()
+      dialog.title = "Select Open File"
+      dialog.multiple = false
+      dialog.directory = data.drive & data.homePath
+      dialog.run()
+      if dialog.files.len == 0: 
+        textBox010.text = ""
+      else:
+        textBox010.text = dialog.files[0]
+      
+  # set botton onClick
+  button020.onClick = proc(event: ClickEvent) =
+    # Save file dialog
+    var dialog = newOpenFileDialog()
+    dialog.title = "Select Save File"
+    dialog.multiple = false
+    dialog.directory = data.drive & data.homePath
 
-  # ##########################
-  # Base plate size desided section
-  # ##########################
+    dialog.run()
+    if dialog.files.len == 0: 
+      textBox020.text = ""
+    else:
+      textBox020.text = dialog.files[0]
+
+  button030.onClick = proc(event: ClickEvent) =
+    # Save images directory dialog
+    var dialog = SelectDirectoryDialog()
+    dialog.title = "Select Directory for images"
+    dialog.startDirectory = data.drive & data.homePath
+    dialog.run()
+    if dialog.selectedDirectory == "":
+      textBox030.text = ""
+    else:
+      textBox030.text = dialog.selectedDirectory
+  
+  # set checkbox section
   var checkBox010 = newCheckbox("")
   plate1.add(checkBox010)
   if data.baseSize.name == "5x10": checkBox010.checked = true
@@ -374,10 +411,44 @@ proc showWindow*()=
   var textBox071 = newTextBox()
   plate4.add(textBox071)
 
+  # set checkbox onClick section
+  checkBox010.onClick = proc(event: ClickEvent) =
+    checkBox020.checked = false
+    checkBox030.checked = false
+    checkBox040.checked = false
+    textBox070.text = ""
+    textBox070.editable = false
+    textBox071.text = ""
+    textBox071.editable = false
 
-  # ##########################
-  # Spaces of base rectanble desided section
-  # ##########################
+  checkBox020.onClick = proc(event: ClickEvent) =
+    checkBox010.checked = false
+    checkBox030.checked = false
+    checkBox040.checked = false
+    textBox070.text = ""
+    textBox070.editable = false
+    textBox071.text = ""
+    textBox071.editable = false
+
+  checkBox030.onClick = proc(event: ClickEvent) =
+    checkBox010.checked = false
+    checkBox020.checked = false
+    checkBox040.checked = false
+    textBox070.text = ""
+    textBox070.editable = false
+    textBox071.text = ""
+    textBox071.editable = false
+    
+  checkBox040.onClick = proc(event: ClickEvent) =
+    checkBox010.checked = false
+    checkBox020.checked = false
+    checkBox030.checked = false
+    textBox070.editable = true
+    textBox071.editable = true
+    textBox070.text = "2000.0"
+    textBox071.text = "1000.0"
+
+  # set Spaces of base rectanble desided section
   var label080 = newLabel()
   space1.add(label080)
   label080.text = "Base Left Space      "
@@ -448,6 +519,18 @@ proc showWindow*()=
   space9.add(button040)
 
 
+
+
+  # set Progress bar section
+  var label160 = newLabel()
+  progress1.add(label160)
+  label160.text = "        "
+
+  var label161 = newLabel()
+  progress1.add(label161)
+  label161.text = "Progress"
+
+  # set input and output data on textArea section
   # ##########################
   # Show input rectangles section
   # ##########################
@@ -468,23 +551,9 @@ proc showWindow*()=
 
   var textArea150 = newTextArea()
   monitor2.add(textArea150)
-  
-
-  # ##########################
-  # Progress bar section
-  # ##########################
-  var label160 = newLabel()
-  progress1.add(label160)
-  label160.text = "        "
-
-  var label161 = newLabel()
-  progress1.add(label161)
-  label161.text = "Progress"
 
 
-  # ##########################
-  # Buttons section
-  # ##########################
+  # set Buttons secti
   var label170 = newLabel()
   progress2.add(label170)
   label170.text = "                                                                                                    "
@@ -499,147 +568,6 @@ proc showWindow*()=
   var button051 = newbutton("Start Locating")
   buttons2.add(button051)
 
-
-  # ##########################
-  # CheckBox Click Events
-  # ##########################
-  checkBox010.onClick = proc(event: ClickEvent) =
-    checkBox020.checked = false
-    checkBox030.checked = false
-    checkBox040.checked = false
-    textBox070.text = ""
-    textBox070.editable = false
-    textBox071.text = ""
-    textBox071.editable = false
-
-  checkBox020.onClick = proc(event: ClickEvent) =
-    checkBox010.checked = false
-    checkBox030.checked = false
-    checkBox040.checked = false
-    textBox070.text = ""
-    textBox070.editable = false
-    textBox071.text = ""
-    textBox071.editable = false
-
-  checkBox030.onClick = proc(event: ClickEvent) =
-    checkBox010.checked = false
-    checkBox020.checked = false
-    checkBox040.checked = false
-    textBox070.text = ""
-    textBox070.editable = false
-    textBox071.text = ""
-    textBox071.editable = false
-    
-  checkBox040.onClick = proc(event: ClickEvent) =
-    checkBox010.checked = false
-    checkBox020.checked = false
-    checkBox030.checked = false
-    textBox070.editable = true
-    textBox071.editable = true
-    textBox070.text = "2000.0"
-    textBox071.text = "1000.0"
-
-
-  # ##########################
-  # Quit daialog
-  # ##########################
-  window.onCloseClick = proc(event: CloseClickEvent) =
-    case window.msgBox("Do you want to quit?", "Quit?", "Quit", "Minimize", "Cancel")
-    of 1: app.quit()
-    of 2: window.minimize()
-    else: discard
-
-  
-  # ##########################
-  # Button onClick events
-  # ##########################
-  button010.onClick = proc(event: ClickEvent) =
-    # Open file dialog
-    var dialog = newOpenFileDialog()
-    dialog.title = "Select Open File"
-    dialog.multiple = false
-    dialog.directory = data.drive & data.homePath
-    dialog.run()
-    if dialog.files.len == 0: 
-      textBox010.text = ""
-    else:
-      textBox010.text = dialog.files[0]
-    
-  button020.onClick = proc(event: ClickEvent) =
-    # Save file dialog
-    var dialog = newOpenFileDialog()
-    dialog.title = "Select Save File"
-    dialog.multiple = false
-    dialog.directory = data.drive & data.homePath
-
-    dialog.run()
-    if dialog.files.len == 0: 
-      textBox020.text = ""
-    else:
-      textBox020.text = dialog.files[0]
-
-  button030.onClick = proc(event: ClickEvent) =
-    # Save images directory dialog
-    var dialog = SelectDirectoryDialog()
-    dialog.title = "Select Directory for images"
-    dialog.startDirectory = data.drive & data.homePath
-    dialog.run()
-    if dialog.selectedDirectory == "":
-      textBox030.text = ""
-    else:
-      textBox030.text = dialog.selectedDirectory
-
-  button050.onClick = proc(event: ClickEvent) =
-    app.quit()
-
-
-  # ##########################
-  # 終了ポップアップダイアログ
-  # ##########################
-  # 終了ポップアップダイアログ作成
-  var closew = nigui.newWindow("板取の終了")
-  closew.width = 250.scaleToDpi
-  closew.height = 110.scaleToDpi
-
-  # ボタンなどを表示する領域の作成
-  var container2 = nigui.newLayoutContainer(Layout_Horizontal)
-  closew.add(container2)
-
-  var label300 = newlabel()
-  container2.add(label300)
-
-  var label301 = newLabel()
-  container2.add(label301)
-
-  var container3 = nigui.newLayoutContainer(Layout_Vertical)
-  container2.add(container3)
-
-  var label302 = newLabel()
-  container3.add(label302)
-
-  var button300 = newButton("OK")
-  container3.add(button300)           
-
-  # ##########################
-  # 終了ポップアップダイアログ 終了ボタンクリック時の処理
-  # ##########################
-  button300.onClick = proc(event: ClickEvent) =
-    closew.hide()
-    #[
-    var winImage2 = newWindow("Show Located Images")
-    winImage2.width = 582.scaleToDpi
-    winImage2.height = 436.scaleToDpi
-    var images: seq[Image]
-
-    for f in imageFiles:
-      var image2 = newImage()
-      image2.loadFromFile(f)
-      images.add(image2)
-    discard startImageWindow(winImage2, imageFiles, imageFiles.len, images)
-    ]#
-    startImageWindow(imageFiles)
-    
-
   # ##########################
   # Button onClick events: Manual Input
   # ##########################
@@ -650,14 +578,25 @@ proc showWindow*()=
     fileName = openFile
     manualInput(fileName)
 
-  # ##########################
-  # Button onClick events: Get data
-  # ##########################
+    # Button onClick event: Get data
   button040.onClick = proc(event: ClickEvent) =
-    # File名の取得
+    # get file names from textBoxes
     if textBox010.text != "": openFile = textbox010.text 
     saveFile = textBox020.text
     data.drawDir = textBox030.text
+
+    # get Input Data
+    # ------------------------------
+    # Get Data 
+    # ------------------------------
+    block doProcess:
+      if not existsFile(openFile) or saveFile == "" or not existsFile(saveFile) or data.drawDir == "" or not existsDir(data.drawDir):
+        case window.msgBox("Open File, Save File, Images Folderは有効なものを指定して下さい　　\n終了します", "WARINIG", "Quit")
+        of 1: app.quit()
+        of 2: window.minimize()
+        of 3: discard
+        else: app.quit()
+        break doProcess
 
     var w, h: float
     var inputMode: int
@@ -709,16 +648,31 @@ proc showWindow*()=
       inc i
     textArea140.text = text  
 
-  # ##########################
-  # Button onClick events: locate rectangles
-  # ##########################
-  button051.onClick = proc(event: ClickEvent) =
+  # quit on button50 onClicked 
+  button050.onClick = proc(event: ClickEvent) =
+    app.quit()
 
+  # Button onClick event: located rectangles
+  # ------------------------------
+  # Get Located 
+  # ------------------------------
+  button051.onClick = proc(event: ClickEvent) =
+  
     winImage.dispose()
     # File名の取得
     if textBox010.text != "": openFile = textbox010.text 
     saveFile = textBox020.text
     data.drawDir = textBox030.text
+
+    block doProcess:
+      if not existsFile(openFile) or saveFile == "" or not existsFile(saveFile) or data.drawDir == "" or not existsDir(data.drawDir):
+        case window.msgBox("Open File, Save File, Images Folderは有効なものを指定して下さい　　\n終了します", "WARINIG", "Quit")
+        of 1: app.quit()
+        of 2: window.minimize()
+        of 3: discard
+        else: app.quit()
+        break doProcess
+      
     # ベースサイズ・スペースの取得
     sxl = textBox080.text.parseFloat 
     sxr = textBox090.text.parseFloat
@@ -882,10 +836,10 @@ proc showWindow*()=
     var msg: string
     # Close Dialogの表示
     if noNgFlag:
-      label301.text = "板取は正常に終了しました        "
+      #label301.text = "板取は正常に終了しました        "
       msg = "板取は正常に終了しました        "
     else:
-      label301.text = "板取は正常に終了しました\r\n配置できなかった長方形は\r\nunlocated.csvに保存しました    "
+      #label301.text = "板取は正常に終了しました\r\n配置できなかった長方形は\r\nunlocated.csvに保存しました    "
       msg = "板取は正常に終了しました\r\n配置できなかった長方形は\r\nunlocated.csvに保存しました    "
     
     progressBar1.value = 0
@@ -897,6 +851,13 @@ proc showWindow*()=
     else: discard
     startImageWindow(imageFiles)
 
+  # show quit daialog when quit icon clicked
+  window.onCloseClick = proc(event: CloseClickEvent) =
+    case window.msgBox("Do you want to quit?", "Quit?", "Quit", "Minimize", "Cancel")
+    of 1: app.quit()
+    of 2: window.minimize()
+    else: discard
+
   window.show()
-  
+    
   app.run()

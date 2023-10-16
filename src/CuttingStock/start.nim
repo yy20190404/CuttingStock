@@ -12,10 +12,7 @@ proc showImage*(win: Window, img: string) {.async.} =
   winStart.add(ctl)
   ctl.widthMode = WidthMode_Fill
   ctl.heightMode = HeightMode_Fill
-  
-  ctl.onClick = proc(c: ClickEvent) =
-    echo "Canvas"
-  
+
   let image = newImage()
   image.loadFromFile(img)
 
@@ -28,7 +25,7 @@ proc showImage*(win: Window, img: string) {.async.} =
     cv.drawImage(image, 30,20)
   
   #winStart.show()
-  
+
 proc startWindow*(w: Window, file: string) {.async.} =
   waitFor showImage(w, file)
   w.show()
